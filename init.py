@@ -16,7 +16,7 @@ def findmax(userlist,statcompare=False,outputpos=True):
 
 #Class - Item, this can either be a consumable or equipable.
 class item():
-    def __init__(self,name,strength,agi,intel,desc="."):
+    def __init__(self,name,strength,agi,intel,itemtype="arm",desc="."):
         self.name = name
         self.statlist = [strength,agi,intel]
         self.desc = name+" is a "+findmax(self.statlist,True)+" item."+desc
@@ -106,17 +106,30 @@ def batinstance(estrength,eagi,eint,Current,fstrength=None,fagi=None,fint=None,f
         print "1- Attack With your weapon"
         print "2- Increase your evasion (Requires Agility)"
         print "3- Use an item or spell"
-	itemloop = True
-	while itemloop:
-        	try:
-			userinput = int(raw_input("Please enter your command- "))
-			itemloop = False
-		except ValueError:
-			print "You have not entered a number! Please re-enter."
-	if userinput == 1:
-	        #I am going to change this, btw
-	        print "attacking!"
-	        estrength = estrength - 1
+	  itemloop = True
+	  while itemloop:
+        try:
+			      userinput = int(raw_input("Please enter your command- "))
+			      itemloop = False
+		    except ValueError:
+			      print "You have not entered a number! Please re-enter."
+	  if userinput == 1:
+	          #I am going to change this, btw
+	          print "attacking!"
+	          estrength = estrength - 1
+    elif userinput == 2:
+            fevasion = fevasion + (fagi/4)
+    elif userinput == 3:
+            counter = 0
+            usable = []
+            print "Please choose an item from the list."
+            for item in finv:
+                if item.itemtype == "arm":
+                    print "UNUSABLE - "+item.name
+                else:
+                    print str(counter)+" - "+item.name
+                    usable.append(item)
+                    counter = counter + 1
 
 
 #Function - Clear screen by printing a jillion times. Again, this could probably be changed but its the simplest way that (With shell agnosticism) the screen can be cleared (at least, the simplest i've found.
