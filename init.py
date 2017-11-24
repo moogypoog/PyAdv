@@ -13,7 +13,7 @@ def findmax(userlist,statcompare=False,outputpos=True):
     return maximum
 
 class item():
-    def __init__(self,name,strength,agi,intel,desc="."):
+    def __init__(self,name,strength,agi,intel,itemtype="arm",desc="."):
         self.name = name
         self.statlist = [strength,agi,intel]
         self.desc = name+" is a "+findmax(self.statlist,True)+" item."+desc
@@ -98,7 +98,21 @@ def batinstance(estrength,eagi,eint,fstrength=None,fagi=None,fint=None,finv=None
         print "2- Increase your evasion (Requires Agility)"
         print "3- Use an item or spell"
         userinput = raw_input("Please enter your command- ")
-
+        if userinput == 1:
+            pass
+        elif userinput == 2:
+            fevasion = fevasion + (fagi/4)
+        elif userinput == 3:
+            counter = 0
+            usable = []
+            print "Please choose an item from the list."
+            for item in finv:
+                if item.itemtype == "arm":
+                    print "UNUSABLE - "+item.name
+                else:
+                    print str(counter)+" - "+item.name
+                    usable.append(item)
+                    counter = counter + 1
 def cls():
     for i in range(100):
         print
