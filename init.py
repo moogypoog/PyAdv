@@ -1,3 +1,5 @@
+
+#Function - Find the maximum, with more specific refinement to be made towards the three base stats. THIS NEEDS TO BE CHANGED AT SOME POINT
 def findmax(userlist,statcompare=False,outputpos=True):
     maximum = userlist[0]
     position = 0
@@ -12,6 +14,7 @@ def findmax(userlist,statcompare=False,outputpos=True):
         return maximum,position
     return maximum
 
+#Class - Item, this can either be a consumable or equipable.
 class item():
     def __init__(self,name,strength,agi,intel,desc="."):
         self.name = name
@@ -22,10 +25,14 @@ class item():
         print "Raw Stats (Strength,Agility,Intelligence)- ",self.statlist
         print "Description - ",self.desc
 
+
+#Some basic class definitions here, i may put other weapons in another file r smth idk
 Basic_Longsword = item("Basic Longsword",2,1,1)
 Basic_Shortsword = item("Basic Shortsword",1,2,1)
 Basic_Staff= item("Basic Staff",1,1,2)
 
+
+#Class - Character, may change in future.
 class character():
     def __init__(self,name,strength,agi,intel,inv=[]):
         self.name = name
@@ -55,25 +62,25 @@ def startscreen():
     initialinput = raw_input("Please input the number of the option you want")
     if initialinput == "1":
         print "loading character initialisation module"
-        newchar()
+        Current = newchar()
+	return Current
     elif initialinput == "2":
         print "Loading..."
     elif initialinput == "3":
         print "You may now close this window."
+
+
+#Function - makes a new character, and assigns it to the current character class. May change this later in the case of multiple character instances at once.
 def newchar():
     try:
         import random
         rolling = True
         while rolling:
             strength = random.randrange(0,100)
-            if strength < 50:
-                intel = random.randrange(0,100)
-                agi = random.randrange(0,100-strength-intel)
-                if intel < 50:
-                    agi = random.randrange(0,100) 
-            else:
-                intel = random.randrange(0,100-strength)
-                agi = random.randrange(0,100-strength-intel)
+            intel = random.randrange(0,100-strength)
+            agi = random.randrange(0,100-strength-intel)
+            if intel < 50:
+                agi = random.randrange(0,100)
             if strength < 50 and agi < 50 and intel < 50:
                 print "Stats insufficient. Rerolling."
             else:
@@ -83,12 +90,14 @@ def newchar():
     print "Strength- ",strength," \t Agility- ",agi," \t Intelligence- ",intel
     print "Now writing to external file and updating inventory."
     Current = character(raw_input("Please enter your characters name "),strength,agi,intel)
+    return Current
 
-def batinstance(estrength,eagi,eint,fstrength=None,fagi=None,fint=None,finv=None,charclass=None):
+#Function - One instance of a Battle
+def batinstance(estrength,eagi,eint,Current,fstrength=None,fagi=None,fint=None,finv=None,charclass=None):
     if fstrength is None or fagi is None or fint is None or finv is None or charclass is None:
         fstrength = Current.strength
         fagi = Current.agi
-        fint = Current.int
+        fint = Current.intel
         finv = Current.inv
         charclass = Current.charclass
     fevasion = 2 * fagi
@@ -97,8 +106,20 @@ def batinstance(estrength,eagi,eint,fstrength=None,fagi=None,fint=None,finv=None
         print "1- Attack With your weapon"
         print "2- Increase your evasion (Requires Agility)"
         print "3- Use an item or spell"
-        userinput = raw_input("Please enter your command- ")
+	itemloop = True
+	while itemloop:
+        	try:
+			userinput = int(raw_input("Please enter your command- "))
+			itemloop = False
+		except ValueError:
+			print "You have not entered a number! Please re-enter."
+	if userinput == 1:
+	        #I am going to change this, btw
+	        print "attacking!"
+	        estrength = estrength - 1
 
+
+#Function - Clear screen by printing a jillion times. Again, this could probably be changed but its the simplest way that (With shell agnosticism) the screen can be cleared (at least, the simplest i've found.
 def cls():
     for i in range(100):
-        print
+        print 
