@@ -1,3 +1,5 @@
+
+#Function - Find the maximum, with more specific refinement to be made towards the three base stats. THIS NEEDS TO BE CHANGED AT SOME POINT
 def findmax(userlist,statcompare=False,outputpos=True):
     maximum = userlist[0]
     position = 0
@@ -12,6 +14,7 @@ def findmax(userlist,statcompare=False,outputpos=True):
         return maximum,position
     return maximum
 
+#Class - Item, this can either be a consumable or equipable.
 class item():
     def __init__(self,name,strength,agi,intel,desc="."):
         self.name = name
@@ -22,10 +25,14 @@ class item():
         print "Raw Stats (Strength,Agility,Intelligence)- ",self.statlist
         print "Description - ",self.desc
 
+
+#Some basic class definitions here, i may put other weapons in another file r smth idk
 Basic_Longsword = item("Basic Longsword",2,1,1)
 Basic_Shortsword = item("Basic Shortsword",1,2,1)
 Basic_Staff= item("Basic Staff",1,1,2)
 
+
+#Class - Character, may change in future.
 class character():
     def __init__(self,name,strength,agi,intel,inv=[]):
         self.name = name
@@ -60,6 +67,8 @@ def startscreen():
         print "Loading..."
     elif initialinput == "3":
         print "You may now close this window."
+
+#Function - makes a new character, and assigns it to the current character class. May change this later in the case of multiple character instances at once.
 def newchar():
     try:
         import random
@@ -84,6 +93,7 @@ def newchar():
     print "Now writing to external file and updating inventory."
     Current = character(raw_input("Please enter your characters name "),strength,agi,intel)
 
+#Function - One instance of a Battle
 def batinstance(estrength,eagi,eint,fstrength=None,fagi=None,fint=None,finv=None,charclass=None):
     if fstrength is None or fagi is None or fint is None or finv is None or charclass is None:
         fstrength = Current.strength
@@ -97,8 +107,14 @@ def batinstance(estrength,eagi,eint,fstrength=None,fagi=None,fint=None,finv=None
         print "1- Attack With your weapon"
         print "2- Increase your evasion (Requires Agility)"
         print "3- Use an item or spell"
-        userinput = raw_input("Please enter your command- ")
+	while:
+        	try:
+			userinput = raw_input("Please enter your command- ")
+			break
+		except ValueError:
+			print "You have not entered a number! Please re-enter."
 
+#Function - Clear screen by printing a jillion times. Again, this could probably be changed but its the simplest way that (With shell agnosticism) the screen can be cleared (at least, the simplest i've found.
 def cls():
     for i in range(100):
         print
