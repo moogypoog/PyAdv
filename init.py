@@ -62,11 +62,13 @@ def startscreen():
     initialinput = raw_input("Please input the number of the option you want")
     if initialinput == "1":
         print "loading character initialisation module"
-        newchar()
+        Current = newchar()
+	return Current
     elif initialinput == "2":
         print "Loading..."
     elif initialinput == "3":
         print "You may now close this window."
+
 
 #Function - makes a new character, and assigns it to the current character class. May change this later in the case of multiple character instances at once.
 def newchar():
@@ -75,14 +77,10 @@ def newchar():
         rolling = True
         while rolling:
             strength = random.randrange(0,100)
-            if strength < 50:
-                intel = random.randrange(0,100)
-                agi = random.randrange(0,100-strength-intel)
-                if intel < 50:
-                    agi = random.randrange(0,100) 
-            else:
-                intel = random.randrange(0,100-strength)
-                agi = random.randrange(0,100-strength-intel)
+            intel = random.randrange(0,100-strength)
+            agi = random.randrange(0,100-strength-intel)
+            if intel < 50:
+                agi = random.randrange(0,100)
             if strength < 50 and agi < 50 and intel < 50:
                 print "Stats insufficient. Rerolling."
             else:
@@ -92,13 +90,14 @@ def newchar():
     print "Strength- ",strength," \t Agility- ",agi," \t Intelligence- ",intel
     print "Now writing to external file and updating inventory."
     Current = character(raw_input("Please enter your characters name "),strength,agi,intel)
+    return Current
 
 #Function - One instance of a Battle
-def batinstance(estrength,eagi,eint,fstrength=None,fagi=None,fint=None,finv=None,charclass=None):
+def batinstance(estrength,eagi,eint,Current,fstrength=None,fagi=None,fint=None,finv=None,charclass=None):
     if fstrength is None or fagi is None or fint is None or finv is None or charclass is None:
         fstrength = Current.strength
         fagi = Current.agi
-        fint = Current.int
+        fint = Current.intel
         finv = Current.inv
         charclass = Current.charclass
     fevasion = 2 * fagi
@@ -107,14 +106,20 @@ def batinstance(estrength,eagi,eint,fstrength=None,fagi=None,fint=None,finv=None
         print "1- Attack With your weapon"
         print "2- Increase your evasion (Requires Agility)"
         print "3- Use an item or spell"
-	while:
+	itemloop = True
+	while itemloop:
         	try:
-			userinput = raw_input("Please enter your command- ")
-			break
+			userinput = int(raw_input("Please enter your command- "))
+			itemloop = False
 		except ValueError:
 			print "You have not entered a number! Please re-enter."
+	if userinput == 1:
+	        #I am going to change this, btw
+	        print "attacking!"
+	        estrength = estrength - 1
+
 
 #Function - Clear screen by printing a jillion times. Again, this could probably be changed but its the simplest way that (With shell agnosticism) the screen can be cleared (at least, the simplest i've found.
 def cls():
     for i in range(100):
-        print
+        print 
