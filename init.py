@@ -64,7 +64,7 @@ Basic_Shortsword = item("Basic Shortsword",1,10,1,"wep")
 Basic_Staff= item("Basic Staff",1,1,10,"wep")
 
 
-#Class - Character, may change in future.
+#Class - Character, may change in future. This goes for both enemy and friendly characters.
 class character():
     def __init__(self,name,strength,agi,intel,inv=[]):
         self.name = name
@@ -72,20 +72,23 @@ class character():
         self.agi = agi
         self.intel = intel
         if findmax([strength,agi,intel],True) == "Strength":
-            inv.append(Basic_Longsword)
             self.charclass = "Str"
-            self.inv = inv
-            Basic_Longsword.equip(self)
+            if not inv:
+                inv.append(Basic_Longsword)
+                self.inv = inv
+                Basic_Longsword.equip(self)
         elif findmax([strength,agi,intel],True) == "Agility":
-            inv.append(Basic_Shortsword)
             self.charclass = "Agi"
-            self.inv = inv
-            Basic_Shortsword.equip(self)
+            if not inv:
+                inv.append(Basic_Shortsword)
+                self.inv = inv
+                Basic_Shortsword.equip(self)
         elif findmax([strength,agi,intel],True) == "Intelligence":
-            inv.append(Basic_Staff)
             self.charclass = "Int"
-            self.inv = inv
-            Basic_Staff.equip(self)
+            if not inv:
+                inv.append(Basic_Staff)
+                self.inv = inv
+                Basic_Staff.equip(self)
         self.inv = inv
         with open("data","w") as savingfile:
             savingfile.write(self.name+"\n"+str(self.strength)+"\n"+str(self.agi)+"\n"+str(intel))
@@ -104,12 +107,15 @@ def startscreen():
         return Current
     elif initialinput == "2":
         print "Loading..."
+        with open("data",
     elif initialinput == "3":
         print "You may now close this window."
 
 
 #Function - One instance of a Battle
 def batinstance(estrength,eagi,eint,Current,fstrength=None,fagi=None,fint=None,finv=None,charclass=None):
+    if fstrength is None or fagi is None or fint is None or finv is None or charclass is None and Current = None:
+        print "Fatal Error! No friendly character instance has been found. Setting all attributes to 0"
     if fstrength is None or fagi is None or fint is None or finv is None or charclass is None:
         fstrength = Current.strength
         fagi = Current.agi
