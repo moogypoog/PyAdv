@@ -117,7 +117,20 @@ def batinstance(estrength,eagi,eint,Current,fstrength=None,fagi=None,fint=None,f
 	        #I am going to change this, btw
 	        print "attacking!"
 	        estrength = estrength - 1
-
+	elif userinput == 2:
+            fevasion =fevasion + (fagi/4)
+        elif userinput == 3:
+            counter = 0
+            usable = []
+            print "Please choose an item from the list."
+            for item in finv:
+                if item.itemtype == "arm":
+                    print "UNUSABLE - "+item.name
+                else:
+                    print str(counter)+" - "+item.name
+                    usable.append(item)
+                    counter = counter + 1
+                    #RETURN TO THIS. UNFINISHED.
 
 #Function - Clear screen by printing a jillion times. Again, this could probably be changed but its the simplest way that (With shell agnosticism) the screen can be cleared (at least, the simplest i've found.
 def cls():
