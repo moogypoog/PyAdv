@@ -36,7 +36,8 @@ def findmax(userlist,statcompare=False,outputpos=True):
 	return maximum
 
 #Class - Item, this can either be a consumable or equipable.
-#itemtype is the type of item. arm indicates armor or otherwise useless item. wep is a primary equipabble weapon.
+#itemtype is the type of item. arm indicates armor or otherwise useless item. wep is a primary equipabble weapon, arm is an armour loadout,
+
 class item():
 	def __init__(self,name,strength,agi,intel,itemtype="arm",desc="."):
 		self.name = name
@@ -48,8 +49,11 @@ class item():
 		print "name- ",self.name
 		print "Raw Stats (Strength,Agility,Intelligence)- ",self.statlist
 		print "Description - ",self.desc
-	def unequip(self):
+	def unequip(self,char):
 		self.equipped = False
+		char.strength = char.strength - self.statlist[0]
+		char.agi = char.agi - self.statlist[1]
+		char.intel = char.intel - self.statlist[2]
 	def equip(self,char):
 		for thing in char.inv:
 			if thing.itemtype == self.itemtype:
@@ -108,55 +112,56 @@ def startscreen():
 	elif initialinput == "2":
 		print "Loading..."
 		with open("data","r") as openedfile:
-			pass
+			line = openedfile.splitlines()
+			print line
 	elif initialinput == "3":
 		print "You may now close this window."
 
 
 #Function - One instance of a Battle
 def batinstance(estrength,eagi,eint,Current,fstrength=None,fagi=None,fint=None,finv=None,charclass=None):
-	 if Current is None and not fstrength:
+	if Current is None and not fstrength:
 		print "Fatal Error! No friendly character instance has been found. Setting all attributes to 0"
-	 if fstrength is None or fagi is None or fint is None or finv is None or charclass is None:
+	if fstrength is None or fagi is None or fint is None or finv is None or charclass is None:
 		fstrength = Current.strength
 		fagi = Current.agi
 		fint = Current.intel
 		finv = Current.inv
 		charclass = Current.charclass
-	 fevasion = 2 * fagi
-	 eevasion = 2 * eagi
-	 while fstrength > 0 and estrength > 0:
+	fevasion = 2 * fagi
+	eevasion = 2 * eagi
+	while fstrength > 0 and estrength > 0:
 		print
 		print "1- Attack With your weapon"
 		print "2- Increase your evasion (Requires Agility)"
 		print "3- Use an item or spell"
 		itemloop = True
 		while itemloop:
-				try:
-					userinput = int(raw_input("Please enter your command- "))
-					itemloop = False
-				except ValueError:
-					print "You have not entered a number! Please re-enter."
+			try:
+				userinput = int(raw_input("Please enter your command- "))
+				itemloop = False
+			except ValueError:
+				print "You have not entered a number! Please re-enter."
 		if userinput == 1:
-				#I am going to change this, btw
-				print "attacking!"
-				estrength = estrength - 1
+			#I am going to change this, btw
+			print "attacking!"
+			estrength = estrength - 1
 		elif userinput == 2:
-				fevasion =fevasion + (fagi/4)
+			fevasion =fevasion + (fagi/4)
 		elif userinput == 3:
-				counter = 0
-				usable = []
-				cls()
-				print "Please choose an item from the list."
-				for thing in finv:
-					if thing.itemtype == "arm":
-						print "UNUSABLE - "+thing.name
-					else:
-						print str(counter)+" - "+thing.name
-						print
-						usable.append(thing)
-						counter = counter + 1
-						#RETURN TO THIS. UNFINISHED.
+			counter = 0
+			usable = []
+			cls()
+			print "Please choose an item from the list."
+			for thing in finv:
+				if thing.itemtype == "arm":
+					print "UNUSABLE - "+thing.name
+				else:
+					print str(counter)+" - "+thing.name
+					print
+					usable.append(thing)
+					counter = counter + 1
+					#RETURN TO THIS. UNFINISHED.
 
 #Function - Clear screen by printing a jillion times. Again, this could probably be changed but its the simplest way that (With shell agnosticism) the screen can be cleared (at least, the simplest i've found.
 def cls():
