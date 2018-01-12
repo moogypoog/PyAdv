@@ -18,6 +18,8 @@ def newchar():
 	print "Strength- ",strength," \t Agility- ",agi," \t Intelligence- ",intel
 	print "Now writing to external file and updating inventory."
 	Current = character(raw_input("Please enter your characters name "),strength,agi,intel)
+        basechar = character(Current.name,Current.strength,Current.agi,Current.intel,Current.inv)
+        print "Done! Character saved."
 	return Current
 
 #Function - Find the maximum, with more specific refinement to be made towards the three base stats. THIS NEEDS TO BE CHANGED AT SOME POINT
@@ -48,12 +50,15 @@ class item():
 		print "name- ",self.name
 		print "Raw Stats (Strength,Agility,Intelligence)- ",self.statlist
 		print "Description - ",self.desc
-	def unequip(self):
+	def unequip(self,char):
 		self.equipped = False
+                char.strength = char.strength - self.statlist[0]
+                char.agi = char.agi - self.statlist[1]
+                char.intel =  char.intel
 	def equip(self,char):
 		for thing in char.inv:
 			if thing.itemtype == self.itemtype:
-				thing.unequip()
+				thing.unequip(char)
 		self.equipped = True
 		char.strength = char.strength + self.statlist[0]
 		char.agi = char.agi + self.statlist[1]
@@ -62,8 +67,6 @@ class item():
 Basic_Longsword = item("Basic Longsword",10,1,1,"wep")
 Basic_Shortsword = item("Basic Shortsword",1,10,1,"wep")
 Basic_Staff= item("Basic Staff",1,1,10,"wep")
-
-
 #Class - Character, may change in future. This goes for both enemy and friendly characters.
 class character():
 	def __init__(self,name,strength,agi,intel,inv=[]):
@@ -93,9 +96,8 @@ class character():
 		with open("data","w") as savingfile:
 			savingfile.write(self.name+"\n"+str(self.strength)+"\n"+str(self.agi)+"\n"+str(intel))
 			for item in self.inv:
-				savingfile.write("\n"+str(item.name))
-		
-def startscreen():
+                            pass
+def startscreen():    
 	print "\t welcome to the game"
 	print "(1) Start New Game"
 	print "(2) Load Save Data"
@@ -111,10 +113,11 @@ def startscreen():
 			pass
 	elif initialinput == "3":
 		print "You may now close this window."
-
-
+        else:
+            print "Invalid option entered. Exitting. No data has been saved."
 #Function - One instance of a Battle
 def batinstance(estrength,eagi,eint,Current,fstrength=None,fagi=None,fint=None,finv=None,charclass=None):
+         import random
 	 if Current is None and not fstrength:
 		print "Fatal Error! No friendly character instance has been found. Setting all attributes to 0"
 	 if fstrength is None or fagi is None or fint is None or finv is None or charclass is None:
@@ -140,7 +143,13 @@ def batinstance(estrength,eagi,eint,Current,fstrength=None,fagi=None,fint=None,f
 		if userinput == 1:
 				#I am going to change this, btw
 				print "attacking!"
-				estrength = estrength - 1
+                                if random.randrange(0,100) < eevasion:
+                                    print "Missed!"
+                                elif random.randrange(0,100) < fint:
+                                    pass
+                                    print "Critical strike! hit for an extra"
+                                else:
+                                    estrength = estrength - fstrength/(random.randrange(10,fstrength*0.9))
 		elif userinput == 2:
 				fevasion =fevasion + (fagi/4)
 		elif userinput == 3:
